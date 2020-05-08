@@ -32,22 +32,24 @@ local COOKFN = GLOBAL.ACTIONS.COOK.fn
 
 --this will override the original function. It will perform it, but then check to see if the item can be cooked by the torch(also through the food's caloric value)
 GLOBAL.ACTIONS.COOK.fn = function(act)
-	if act.invobject.components.cooker then
-		local temp = act.invobject
-		act.invobject = act.target
-		act.target = temp
-	end
-	local cancook, str = COOKFN(act)
-	if not cancook then
-		if act.invobject:HasTag("lightcooker") and act.target.components.edible ~= nil and act.target.components.edible.hungervalue > TUNING.CALORIES_SMALL then
-			return false, "TOODENSE"
-		elseif act.target:HasTag("lightcooker") and act.invobject.components.edible ~= nil and act.invobject.components.edible.hungervalue > TUNING.CALORIES_SMALL then
-			return false, "TOODENSE"
+	if act.invobject
+		if act.invobject.components.cooker then
+			local temp = act.invobject
+			act.invobject = act.target
+			act.target = temp
+		end
+		local cancook, str = COOKFN(act)
+		if not cancook then
+			if act.invobject:HasTag("lightcooker") and act.target.components.edible ~= nil and act.target.components.edible.hungervalue > TUNING.CALORIES_SMALL then
+				return false, "TOODENSE"
+			elseif act.target:HasTag("lightcooker") and act.invobject.components.edible ~= nil and act.invobject.components.edible.hungervalue > TUNING.CALORIES_SMALL then
+				return false, "TOODENSE"
+			else
+				return cancook, str
+			end
 		else
 			return cancook, str
 		end
-	else
-		return cancook, str
 	end
 end
 
