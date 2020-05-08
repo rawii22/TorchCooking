@@ -32,7 +32,7 @@ local COOKFN = GLOBAL.ACTIONS.COOK.fn
 
 --this will override the original function. It will perform it, but then check to see if the item can be cooked by the torch(also through the food's caloric value)
 GLOBAL.ACTIONS.COOK.fn = function(act)
-	if act.invobject
+	if act.invobject then
 		if act.invobject.components.cooker then
 			local temp = act.invobject
 			act.invobject = act.target
