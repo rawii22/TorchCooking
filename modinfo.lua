@@ -1,7 +1,7 @@
 name = "Torch+ (git)"
-description = "Ever wanted to cook with fire? Why can't you cook with your torch? Well now you can.\nIf you hover a food item that is considered small over the torch, it will cook it. e.g. seeds, berries, morsels, carrots."
+description = "Ever wanted to cook with fire? Why can't you cook with your torch? Well now you can.\nIf you hover a food item over the torch, it will cook it."
 author = "rawii22 & lord_of_les_ralph"
-version = "1.1.1"
+version = "1.2"
 icon = "modicon.tex"
 icon_atlas = "modicon.xml"
 

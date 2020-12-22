@@ -1,3 +1,5 @@
+--[[
+
 local function CanCookWithTorch(component)
 
 	--stores original function in variable so we don't have to type it again
@@ -18,13 +20,17 @@ end
 --add changes
 AddComponentPostInit("cooker", CanCookWithTorch)
 
---will give the torch prefab then ability to cook(with tag used above)
+]]
+
+--will give the torch prefab the ability to cook (with tag used above)
 local function AllowToCook(prefab)
 	prefab:AddComponent("cooker")
-	prefab:AddTag("lightcooker")
+	--prefab:AddTag("lightcooker")  -- nevermind about this tag since it's broken...
 end
 --add changes
 AddPrefabPostInit("torch", AllowToCook)
+
+--[[
 
 --Because the ACTION.COOK.fn in actions.lua is weird with wether the 'invobject' or 'target' is the item being cooked vs the cooker, we compare them by checking their tags/components
 local COOKFN = GLOBAL.ACTIONS.COOK.fn
@@ -32,24 +38,17 @@ local COOKFN = GLOBAL.ACTIONS.COOK.fn
 
 --this will override the original function. It will perform it, but then check to see if the item can be cooked by the torch(also through the food's caloric value)
 GLOBAL.ACTIONS.COOK.fn = function(act)
-	if act.invobject then
-		if act.invobject.components.cooker then
-			local temp = act.invobject
-			act.invobject = act.target
-			act.target = temp
-		end
-		local cancook, str = COOKFN(act)
-		if not cancook then
-			if act.invobject:HasTag("lightcooker") and act.target.components.edible ~= nil and act.target.components.edible.hungervalue > TUNING.CALORIES_SMALL then
-				return false, "TOODENSE"
-			elseif act.target:HasTag("lightcooker") and act.invobject.components.edible ~= nil and act.invobject.components.edible.hungervalue > TUNING.CALORIES_SMALL then
-				return false, "TOODENSE"
-			else
-				return cancook, str
-			end
+	local cancook, str = COOKFN(act)
+	if not cancook then
+		if act.invobject and act.invobject:HasTag("lightcooker") and act.target and act.target.components.edible ~= nil and act.target.components.edible.hungervalue > TUNING.CALORIES_SMALL then
+			return false, "TOODENSE"
+		elseif act.target and act.target:HasTag("lightcooker") and act.invobject and act.invobject.components.edible ~= nil and act.invobject.components.edible.hungervalue > TUNING.CALORIES_SMALL then
+			return false, "TOODENSE"
 		else
 			return cancook, str
 		end
+	else
+		return cancook, str
 	end
 end
 
@@ -61,3 +60,5 @@ local function AddCharacterSpeech()
 end
 --add changes
 AddSimPostInit(AddCharacterSpeech)
+
+]]
